@@ -16,22 +16,25 @@
 #define WARN 2
 #define DEBUG 3
 #define ALL 4
-#define DEBUG_LEVEL DEBUG
+#define DEBUG_LEVEL NONE
 
 AudioGeneratorWAV *wav;
 AudioFileSourcePROGMEM *file;
 AudioOutputI2S *out;
 
-long randNumber;
+// GPIO 14 corresponds to D5
+int PIR_PIN = 14;
+bool motion_flag = false;
 
 void setup()
 {
     Serial.begin(9600);
-    delay(1000);
     if (DEBUG_LEVEL >= DEBUG)
     {
         Serial.printf("Starting Setup");
     }
+
+    pinMode(PIR_PIN, INPUT);
 
     audioLogger = &Serial;
 
@@ -99,24 +102,41 @@ void select_random_file()
 
 void loop()
 {
-    if (wav->isRunning())
-    {
-        if (!wav->loop())
-            wav->stop();
-    }
-    else
+    if (digitalRead(PIR_PIN) == HIGH && !motion_flag)
     {
         if (DEBUG_LEVEL >= DEBUG)
         {
-            Serial.printf("WAV done\n");
+            Serial.printf("Motion recognized\n");
         }
-        file->close();
-        delete file;
-        delete wav;
+        motion_flag = true;
+        if (DEBUG_LEVEL >= DEBUG)
+        {
+            Serial.print("Motion_Flag: ");
+            Serial.println(motion_flag);
+        }
+    }
+    if (motion_flag)
+    {
+        if (wav->isRunning())
+        {
+            if (!wav->loop())
+                wav->stop();
+        }
+        else
+        {
+            if (DEBUG_LEVEL >= DEBUG)
+            {
+                Serial.printf("WAV done\n");
+            }
+            file->close();
+            delete file;
+            delete wav;
+            motion_flag = false;
 
-        select_random_file();
-        wav = new AudioGeneratorWAV();
-        delay(2000);
-        wav->begin(file, out);
+            select_random_file();
+            wav = new AudioGeneratorWAV();
+            wav->begin(file, out);
+            delay(2000);
+        }
     }
 }
