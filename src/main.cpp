@@ -1,45 +1,122 @@
 #include <Arduino.h>
-#include <math.h>
-#include <ESP8266WiFi.h>
-#include "AudioFileSourceSPIFFS.h"
+
+#include "AudioFileSourcePROGMEM.h"
 #include "AudioGeneratorWAV.h"
 #include "AudioOutputI2S.h"
 
-AudioFileSourceSPIFFS *file;
+#include "ily.h"
+#include "bye.h"
+#include "nerd.h"
+#include "see.h"
+#include "who.h"
+#include "wrst.h"
+
+#define NONE 0
+#define ERROR 1
+#define WARN 2
+#define DEBUG 3
+#define ALL 4
+#define DEBUG_LEVEL DEBUG
+
 AudioGeneratorWAV *wav;
+AudioFileSourcePROGMEM *file;
 AudioOutputI2S *out;
 
-int PIR_PIN = 5;
-
-void handle_motion()
-{
-  Serial.println("---");
-  Serial.println("Motion detected");
-  Serial.println("---");
-}
+long randNumber;
 
 void setup()
 {
-  WiFi.mode(WIFI_OFF);
-  Serial.begin(9600);
-  SPIFFS.begin();
+    Serial.begin(9600);
+    delay(1000);
+    if (DEBUG_LEVEL >= DEBUG)
+    {
+        Serial.printf("Starting Setup");
+    }
 
-  file = new AudioFileSourceSPIFFS("/bye.wav");
-  out = new AudioOutputI2S();
-  wav = new AudioGeneratorWAV();
-  wav->begin(file, out);
+    audioLogger = &Serial;
+
+    file = new AudioFileSourcePROGMEM();
+    out = new AudioOutputI2S();
+    wav = new AudioGeneratorWAV();
+}
+
+void select_random_file()
+{
+    long rand = random(1, 7);
+
+    if (DEBUG_LEVEL >= DEBUG)
+    {
+        Serial.print("Generated number: ");
+        Serial.println(rand);
+    }
+
+    switch (rand)
+    {
+    case 1:
+        file = new AudioFileSourcePROGMEM(nerd, sizeof(nerd));
+        if (DEBUG_LEVEL >= DEBUG)
+        {
+            Serial.printf("Selecting 'Nerd'\n");
+        }
+        break;
+    case 2:
+        file = new AudioFileSourcePROGMEM(bye, sizeof(bye));
+        if (DEBUG_LEVEL >= DEBUG)
+        {
+            Serial.printf("Selecting 'Bye'\n");
+        }
+        break;
+    case 3:
+        file = new AudioFileSourcePROGMEM(ily, sizeof(ily));
+        if (DEBUG_LEVEL >= DEBUG)
+        {
+            Serial.printf("Selecting 'ILY'\n");
+        }
+        break;
+    case 4:
+        file = new AudioFileSourcePROGMEM(see, sizeof(see));
+        if (DEBUG_LEVEL >= DEBUG)
+        {
+            Serial.printf("Selecting 'See'\n");
+        }
+        break;
+    case 5:
+        file = new AudioFileSourcePROGMEM(who, sizeof(who));
+        if (DEBUG_LEVEL >= DEBUG)
+        {
+            Serial.printf("Selecting 'Who'\n");
+        }
+        break;
+    case 6:
+        file = new AudioFileSourcePROGMEM(wrst, sizeof(wrst));
+        if (DEBUG_LEVEL >= DEBUG)
+        {
+            Serial.printf("Selecting 'Wrst'\n");
+        }
+        break;
+    }
 }
 
 void loop()
 {
-  if (wav->isRunning())
-  {
-    if (!wav->loop())
-      wav->stop();
-  }
-  else
-  {
-    Serial.printf("WAV done\n");
-    delay(1000);
-  }
+    if (wav->isRunning())
+    {
+        if (!wav->loop())
+            wav->stop();
+    }
+    else
+    {
+        if (DEBUG_LEVEL >= DEBUG)
+        {
+            Serial.printf("WAV done\n");
+        }
+        file->close();
+        delete file;
+        delete wav;
+
+        select_random_file();
+        wav = new AudioGeneratorWAV();
+        delay(2000);
+        wav->begin(file, out);
+    }
 }
