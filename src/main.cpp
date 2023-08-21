@@ -4,26 +4,13 @@
 #include "AudioGeneratorWAV.h"
 #include "AudioOutputI2S.h"
 
-// #include "ily.h"
-// #include "bye.h"
-// #include "nerd.h"
-// #include "see.h"
-// #include "who.h"
-// #include "wrst.h"
-
-#include "anton_original.h"
-#include "badbird_original.h"
-#include "bleib_original.h"
-#include "bye_original.h"
-#include "hallo_original.h"
-#include "komm_original.h"
-#include "love_original.h"
-#include "peekaboo_original.h"
-#include "schmeckt_original.h"
-#include "schnaps_original.h"
-#include "seeyou_original.h"
-#include "watchadoin_original.h"
-#include "who_original.h"
+#include "ily.h"
+#include "kommher.h"
+#include "badbird.h"
+#include "hallo.h"
+#include "peekaboo.h"
+#include "watcha.h"
+#include "who.h"
 
 #define NONE 0
 #define ERROR 1
@@ -59,7 +46,7 @@ void setup()
 
 void select_random_file()
 {
-    long rand = random(1, 14);
+    long rand = random(1, 8);
 
     if (DEBUG_LEVEL >= DEBUG)
     {
@@ -70,143 +57,55 @@ void select_random_file()
     switch (rand)
     {
     case 1:
-        file = new AudioFileSourcePROGMEM(anton_original, sizeof(anton_original));
+        file = new AudioFileSourcePROGMEM(badbird, sizeof(badbird));
         if (DEBUG_LEVEL >= DEBUG)
         {
-            Serial.printf("Selecting 'anton_original'\n");
+            Serial.printf("Selecting 'badbird'\n");
         }
         break;
     case 2:
-        file = new AudioFileSourcePROGMEM(badbird_original, sizeof(badbird_original));
+        file = new AudioFileSourcePROGMEM(hallo, sizeof(hallo));
         if (DEBUG_LEVEL >= DEBUG)
         {
-            Serial.printf("Selecting 'badbird_original'\n");
+            Serial.printf("Selecting 'hallo'\n");
         }
         break;
     case 3:
-        file = new AudioFileSourcePROGMEM(bleib_original, sizeof(bleib_original));
+        file = new AudioFileSourcePROGMEM(ily, sizeof(ily));
         if (DEBUG_LEVEL >= DEBUG)
         {
-            Serial.printf("Selecting 'bleib_original'\n");
+            Serial.printf("Selecting 'ily'\n");
         }
         break;
     case 4:
-        file = new AudioFileSourcePROGMEM(bye_original, sizeof(bye_original));
+        file = new AudioFileSourcePROGMEM(kommher, sizeof(kommher));
         if (DEBUG_LEVEL >= DEBUG)
         {
-            Serial.printf("Selecting 'bye_original'\n");
+            Serial.printf("Selecting 'kommher'\n");
         }
         break;
     case 5:
-        file = new AudioFileSourcePROGMEM(hallo_original, sizeof(hallo_original));
+        file = new AudioFileSourcePROGMEM(peekaboo, sizeof(peekaboo));
         if (DEBUG_LEVEL >= DEBUG)
         {
-            Serial.printf("Selecting 'hallo_original'\n");
+            Serial.printf("Selecting 'peekaboo'\n");
         }
         break;
     case 6:
-        file = new AudioFileSourcePROGMEM(komm_original, sizeof(komm_original));
+        file = new AudioFileSourcePROGMEM(watcha, sizeof(watcha));
         if (DEBUG_LEVEL >= DEBUG)
         {
-            Serial.printf("Selecting 'komm_original'\n");
+            Serial.printf("Selecting 'watcha'\n");
         }
         break;
     case 7:
-        file = new AudioFileSourcePROGMEM(love_original, sizeof(love_original));
+        file = new AudioFileSourcePROGMEM(who, sizeof(who));
         if (DEBUG_LEVEL >= DEBUG)
         {
-            Serial.printf("Selecting 'love_original'\n");
-        }
-        break;
-    case 8:
-        file = new AudioFileSourcePROGMEM(peekaboo_original, sizeof(peekaboo_original));
-        if (DEBUG_LEVEL >= DEBUG)
-        {
-            Serial.printf("Selecting 'peekaboo_original'\n");
-        }
-        break;
-    case 9:
-        file = new AudioFileSourcePROGMEM(schmeckt_original, sizeof(schmeckt_original));
-        if (DEBUG_LEVEL >= DEBUG)
-        {
-            Serial.printf("Selecting 'schmeckt_original'\n");
-        }
-        break;
-    case 10:
-        file = new AudioFileSourcePROGMEM(schnaps_original, sizeof(schnaps_original));
-        if (DEBUG_LEVEL >= DEBUG)
-        {
-            Serial.printf("Selecting 'schnaps_original'\n");
-        }
-        break;
-    case 11:
-        file = new AudioFileSourcePROGMEM(seeyou_original, sizeof(seeyou_original));
-        if (DEBUG_LEVEL >= DEBUG)
-        {
-            Serial.printf("Selecting 'seeyou_original'\n");
-        }
-        break;
-    case 12:
-        file = new AudioFileSourcePROGMEM(watchadoin_original, sizeof(watchadoin_original));
-        if (DEBUG_LEVEL >= DEBUG)
-        {
-            Serial.printf("Selecting 'watchadoin_original'\n");
-        }
-        break;
-    case 13:
-        file = new AudioFileSourcePROGMEM(who_original, sizeof(who_original));
-        if (DEBUG_LEVEL >= DEBUG)
-        {
-            Serial.printf("Selecting 'who_original'\n");
+            Serial.printf("Selecting 'who'\n");
         }
         break;
     }
-
-    // switch (rand)
-    // {
-    // case 1:
-    //     file = new AudioFileSourcePROGMEM(nerd, sizeof(nerd));
-    //     if (DEBUG_LEVEL >= DEBUG)
-    //     {
-    //         Serial.printf("Selecting 'Nerd'\n");
-    //     }
-    //     break;
-    // case 2:
-    //     file = new AudioFileSourcePROGMEM(bye, sizeof(bye));
-    //     if (DEBUG_LEVEL >= DEBUG)
-    //     {
-    //         Serial.printf("Selecting 'Bye'\n");
-    //     }
-    //     break;
-    // case 3:
-    //     file = new AudioFileSourcePROGMEM(ily, sizeof(ily));
-    //     if (DEBUG_LEVEL >= DEBUG)
-    //     {
-    //         Serial.printf("Selecting 'ILY'\n");
-    //     }
-    //     break;
-    // case 4:
-    //     file = new AudioFileSourcePROGMEM(see, sizeof(see));
-    //     if (DEBUG_LEVEL >= DEBUG)
-    //     {
-    //         Serial.printf("Selecting 'See'\n");
-    //     }
-    //     break;
-    // case 5:
-    //     file = new AudioFileSourcePROGMEM(who, sizeof(who));
-    //     if (DEBUG_LEVEL >= DEBUG)
-    //     {
-    //         Serial.printf("Selecting 'Who'\n");
-    //     }
-    //     break;
-    // case 6:
-    //     file = new AudioFileSourcePROGMEM(wrst, sizeof(wrst));
-    //     if (DEBUG_LEVEL >= DEBUG)
-    //     {
-    //         Serial.printf("Selecting 'Wrst'\n");
-    //     }
-    //     break;
-    // }
 }
 
 void loop()
