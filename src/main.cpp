@@ -11,6 +11,7 @@
 #include "peekaboo.h"
 #include "watcha.h"
 #include "who.h"
+#include "bleibda.h"
 
 #define NONE 0
 #define ERROR 1
@@ -46,7 +47,7 @@ void setup()
 
 void select_random_file()
 {
-    long rand = random(1, 8);
+    long rand = random(1, 9);
 
     if (DEBUG_LEVEL >= DEBUG)
     {
@@ -103,6 +104,13 @@ void select_random_file()
         if (DEBUG_LEVEL >= DEBUG)
         {
             Serial.printf("Selecting 'who'\n");
+        }
+        break;
+    case 8:
+        file = new AudioFileSourcePROGMEM(bleibda, sizeof(bleibda));
+        if (DEBUG_LEVEL >= DEBUG)
+        {
+            Serial.printf("Selecting 'bleibda'\n");
         }
         break;
     }
